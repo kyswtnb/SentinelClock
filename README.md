@@ -28,3 +28,10 @@ open build/SentinelClock.app
 
 ## License
 MIT License – feel free to modify and redistribute.
+
+## Usage
+
+To stop the clock, run:
+```
+pkill SentinelClock
+```
