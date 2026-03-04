@@ -1,0 +1,18 @@
+# macOS Swift project gitignore
+# Build artifacts
+build/
+DerivedData/
+# Xcode
+*.xcworkspace
+*.xcodeproj
+*.xcuserdata
+# Swift package manager
+.swiftpm/
+# Swift build artifacts
+*.swiftsourceinfo
+# macOS system files
+.DS_Store
+# Gemini artifacts (assistant generated)
+.gemini/
+# Other temporary files
+*.log
