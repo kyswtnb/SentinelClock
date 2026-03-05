@@ -4,7 +4,12 @@ import SwiftUI
 class SentinelClockDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     var clockPanel: ClockPanel!
+    var settingsWindow: NSWindow?
     
+    func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool {
+        return false
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Setup NSPanel
         clockPanel = ClockPanel()
@@ -43,6 +48,12 @@ class SentinelClockDelegate: NSObject, NSApplicationDelegate {
         toggleVisibilityItem.target = self
         menu.addItem(toggleVisibilityItem)
         
+        menu.addItem(NSMenuItem.separator())
+        
+        let preferencesItem = NSMenuItem(title: "Preferences...", action: #selector(openPreferences(_:)), keyEquivalent: ",")
+        preferencesItem.target = self
+        menu.addItem(preferencesItem)
+        
         let clickThroughItem = NSMenuItem(title: "Enable Click-through", action: #selector(toggleClickThrough(_:)), keyEquivalent: "c")
         clickThroughItem.target = self
         menu.addItem(clickThroughItem)
@@ -72,5 +83,25 @@ class SentinelClockDelegate: NSObject, NSApplicationDelegate {
         } else {
             sender.title = "Enable Click-through"
         }
+    }
+    
+    @objc func openPreferences(_ sender: NSMenuItem) {
+        if settingsWindow == nil {
+            let hostingController = NSHostingController(rootView: SettingsView())
+            let window = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 350, height: 400),
+                styleMask: [.titled, .closable],
+                backing: .buffered,
+                defer: false
+            )
+            window.title = "Preferences"
+            window.contentViewController = hostingController
+            window.center()
+            window.isReleasedWhenClosed = false
+            settingsWindow = window
+        }
+        
+        NSApp.activate(ignoringOtherApps: true)
+        settingsWindow?.makeKeyAndOrderFront(nil)
     }
 }
