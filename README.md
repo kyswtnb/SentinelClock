@@ -21,6 +21,20 @@ You can directly download the pre-built application from the [GitHub Releases](h
 3. Move `SentinelClock.app` to your `/Applications` folder.
 4. (Optional) In the app's Preferences, you can configure it to **Launch at Login**.
 
+### Troubleshooting Installation
+Because this app is not signed with an Apple Developer account, macOS Gatekeeper might show a warning such as _"SentinelClock is damaged and can't be opened"_ or _"macOS cannot verify that this app is free from malware"_.
+
+To bypass this and run the app:
+1. Open your **Applications** folder in Finder.
+2. **Right-click (or Control-click)** on `SentinelClock.app` and select **Open**.
+3. A similar dialog will appear, but this time it will have an **Open** button. Click it to launch the app.
+*(You only need to do this the very first time you open the app).*
+
+Alternatively, you can remove the quarantine attribute via Terminal:
+```bash
+xattr -cr /Applications/SentinelClock.app
+```
+
 ## Build & Run
 ```bash
 # From the project root
