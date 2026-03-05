@@ -10,11 +10,11 @@ all: x86 arm universal app
 
 x86:
 	mkdir -p $(BUILD_DIR)
-	swiftc $(SOURCES) -target x86_64-apple-macosx11.0 -emit-executable -o $(BUILD_DIR)/$(APP_NAME)_x86_64
+	swiftc $(SOURCES) -target x86_64-apple-macosx13.0 -emit-executable -o $(BUILD_DIR)/$(APP_NAME)_x86_64
 
 arm:
 	mkdir -p $(BUILD_DIR)
-	swiftc $(SOURCES) -target arm64-apple-macosx11.0 -emit-executable -o $(BUILD_DIR)/$(APP_NAME)_arm64
+	swiftc $(SOURCES) -target arm64-apple-macosx13.0 -emit-executable -o $(BUILD_DIR)/$(APP_NAME)_arm64
 
 universal: x86 arm
 	lipo -create -output $(BUILD_DIR)/$(APP_NAME) $(BUILD_DIR)/$(APP_NAME)_x86_64 $(BUILD_DIR)/$(APP_NAME)_arm64
