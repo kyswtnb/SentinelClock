@@ -1,0 +1,33 @@
+name: Release SentinelClock
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build_and_release:
+    name: Build & Release App
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build SentinelClock
+        run: |
+          make clean
+          make app
+        
+      - name: Archive Application
+        run: |
+          cd build
+          zip -r SentinelClock.zip SentinelClock.app
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/SentinelClock.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
