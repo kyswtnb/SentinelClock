@@ -20,20 +20,20 @@ enum ClockFont: String, CaseIterable, Identifiable {
 }
 
 enum DateFormatStyle: String, CaseIterable, Identifiable {
-    case ymd = "yyyy/MM/dd"
-    case dmy = "dd/MM/yyyy"
-    case mdy = "MM/dd/yyyy"
-    case full = "E, d MMM yyyy"
+    case ymd = "yyyy/MM/dd (EEE)"
+    case dmy = "dd/MM/yyyy (EEE)"
+    case mdy = "MM/dd/yyyy (EEE)"
+    case full = "EEEE, d MMM yyyy"
     case none = "None (Hide)"
     
     var id: String { self.rawValue }
     
     var formatString: String {
         switch self {
-        case .ymd: return "yyyy/MM/dd"
-        case .dmy: return "dd/MM/yyyy"
-        case .mdy: return "MM/dd/yyyy"
-        case .full: return "E, d MMM yyyy"
+        case .ymd: return "yyyy/MM/dd (EEE)"
+        case .dmy: return "dd/MM/yyyy (EEE)"
+        case .mdy: return "MM/dd/yyyy (EEE)"
+        case .full: return "EEEE, d MMM yyyy"
         case .none: return ""
         }
     }
