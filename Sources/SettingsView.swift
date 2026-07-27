@@ -45,6 +45,8 @@ struct SettingsView: View {
     @AppStorage("dateFormat") private var dateFormat: DateFormatStyle = .ymd
     @AppStorage("textColor") private var textColor: Color = .primary
     @AppStorage("bgColor") private var bgColor: Color = Color(NSColor.windowBackgroundColor).opacity(0.85)
+    @AppStorage("timeFontSize") private var timeFontSize: Double = 48
+    @AppStorage("dateFontSize") private var dateFontSize: Double = 24
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
 
     var body: some View {
@@ -82,6 +84,28 @@ struct SettingsView: View {
                         Text(format.rawValue).tag(format)
                     }
                 }
+                
+                Slider(value: $timeFontSize, in: 24...120, step: 1) {
+                    Text("Time Font Size")
+                } minimumValueLabel: {
+                    Text("24")
+                } maximumValueLabel: {
+                    Text("120")
+                }
+                Text("Current: \(Int(timeFontSize)) pt")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Slider(value: $dateFontSize, in: 12...60, step: 1) {
+                    Text("Date Font Size")
+                } minimumValueLabel: {
+                    Text("12")
+                } maximumValueLabel: {
+                    Text("60")
+                }
+                Text("Current: \(Int(dateFontSize)) pt")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             } header: {
                 Text("Appearance")
             }

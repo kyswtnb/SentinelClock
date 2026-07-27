@@ -1,6 +1,10 @@
 import AppKit
 import SwiftUI
 
+extension Notification.Name {
+    static let clockSizeChanged = Notification.Name("clockSizeChanged")
+}
+
 class SentinelClockDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     var clockPanel: ClockPanel!
@@ -15,18 +19,14 @@ class SentinelClockDelegate: NSObject, NSApplicationDelegate {
         clockPanel = ClockPanel()
         
         let contentView = ClockView()
-        
         let hostingView = NSHostingView(rootView: contentView)
         clockPanel.contentView = hostingView
         
-        // Auto-size the window to fit the SwiftUI content
-        let fittingSize = hostingView.fittingSize
-        if let screen = NSScreen.main {
-            let rect = screen.frame
-            let x = (rect.width - fittingSize.width) / 2
-            let y = (rect.height - fittingSize.height) / 2
-            clockPanel.setFrame(NSRect(x: x, y: y, width: fittingSize.width, height: fittingSize.height), display: true)
-        }
+        // Listen to size changes
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSizeChange(_:)), name: .clockSizeChanged, object: nil)
+        
+        // Auto-size the window to fit the SwiftUI content initially
+        resizePanel(to: hostingView.fittingSize)
         
         clockPanel.makeKeyAndOrderFront(nil)
         
@@ -39,6 +39,39 @@ class SentinelClockDelegate: NSObject, NSApplicationDelegate {
         }
         
         setupMenu()
+    }
+    
+    private func resizePanel(to size: CGSize) {
+        guard let screen = NSScreen.main else { return }
+        
+        let currentFrame = clockPanel.frame
+        let newWidth = size.width
+        let newHeight = size.height
+        
+        // Detect if initial frame configuration (default window size in ClockPanel is 700x120)
+        let isInitial = currentFrame.width == 700 && currentFrame.height == 120
+        
+        let newX: CGFloat
+        let newY: CGFloat
+        
+        if isInitial {
+            let rect = screen.frame
+            newX = (rect.width - newWidth) / 2
+            newY = (rect.height - newHeight) / 2
+        } else {
+            // Keep the window centered relative to its current screen position
+            newX = currentFrame.midX - newWidth / 2
+            newY = currentFrame.midY - newHeight / 2
+        }
+        
+        clockPanel.setFrame(NSRect(x: newX, y: newY, width: newWidth, height: newHeight), display: true, animate: false)
+    }
+    
+    @objc private func handleSizeChange(_ notification: Notification) {
+        guard let size = notification.object as? CGSize else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.resizePanel(to: size)
+        }
     }
     
     func setupMenu() {
